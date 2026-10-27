@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mosquito & Insect Lamp Simulator | 2D & 3D Interactive Physics</title>
+  <meta name="description" content="Interactive 2D and 3D simulation of ultraviolet mosquito and insect lamps, demonstrating phototaxis wavelengths (365nm), 37°C thermal lures, high-voltage electric zappers, and whisper-quiet suction vortexes.">
+  
+  <!-- Modern Google Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="brand-section">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <div class="brand-title">
+          <span>Mosquito &amp; Insect Lamp Simulator</span>
+          <span class="brand-badge" id="chemical-free-badge">100% Chemical-Free</span>
+        </div>
+      </div>
+
+      <!-- Viewport Mode Selector (3D / 2D / Split View) -->
+      <div class="view-mode-tabs">
+        <button class="tab-btn active" id="tab-3d" data-view="3d">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+          3D Realistic Room
+        </button>
+        <button class="tab-btn" id="tab-2d" data-view="2d">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="3" y1="9" x2="21" y2="9"></line>
+            <line x1="9" y1="21" x2="9" y2="9"></line>
+          </svg>
+          2D Tactical Radar
+        </button>
+        <button class="tab-btn" id="tab-split" data-view="split">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="12" y1="3" x2="12" y2="21"></line>
+          </svg>
+          Dual Split View
+        </button>
+      </div>
+
+      <!-- Day / Night Mode Switcher -->
+      <div class="day-night-toggle" id="day-night-toggle">
+        <button class="dn-btn active" id="btn-night-mode" data-dn="night" title="Night Mode: Optimal UV Contrast & Catch (Slide 11)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          Night
+        </button>
+        <button class="dn-btn" id="btn-day-mode" data-dn="day" title="Day Mode: Bright Light Washes UV Contrast (Slide 11)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          Day
+        </button>
+      </div>
+
+      <!-- Actions -->
+      <div class="header-actions">
+        <button class="icon-btn" id="btn-audio-toggle" title="Toggle Sound FX (Zaps, Vortex Fan, Mosquito Buzz)">
+          <svg id="icon-sound-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+            <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path>
+            <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+          <svg id="icon-sound-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+        </button>
+
+        <button class="icon-btn" id="btn-play-pause" title="Play / Pause Simulation">
+          <svg id="icon-pause" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="6" y="4" width="4" height="16"></rect>
+            <rect x="14" y="4" width="4" height="16"></rect>
+          </svg>
+          <svg id="icon-play" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </button>
+
+        <button class="guide-pill-btn" id="btn-open-guide">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          Slide Guide &amp; Specs
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="workspace-body">
+      <div class="viewports-wrapper" id="viewports-wrapper">
+        <!-- 3D Realistic Viewport -->
+        <div class="viewport-pane active-full" id="pane-3d">
+          <div id="canvas-3d-container"></div>
+          
+          <!-- 3D Camera Controls Overlay -->
+          <div class="camera-pills">
+            <button class="camera-pill-btn active" data-cam="orbit">Orbit Room</button>
+            <button class="camera-pill-btn" data-cam="closeup">Close-up Zapper</button>
+            <button class="camera-pill-btn" data-cam="human_pov">Human POV</button>
+            <button class="camera-pill-btn" data-cam="topdown">Top-Down 3D</button>
+          </div>
+        </div>
+
+        <!-- 2D Tactical Viewport -->
+        <div class="viewport-pane hidden" id="pane-2d">
+          <canvas id="canvas-2d"></canvas>
+
+          <!-- 2D Floating Sub Controls -->
+          <div class="floating-sub-controls">
+            <button class="sub-btn active" id="btn-2d-topdown">Top-Down Floorplan</button>
+            <button class="sub-btn" id="btn-2d-side">Side Cross-Section</button>
+            <button class="sub-btn" id="btn-2d-ruler" title="Toggle 3-5m Spacing Ruler">Ruler: ON</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls & Live Telemetry Sidebar -->
+      <aside class="sidebar-panel">
+        <!-- Presets Section -->
+        <section class="sidebar-section">
+          <div class="section-title">
+            <span>Scenario Presets</span>
+            <span style="color: var(--cyan-accent); font-size: 0.7rem;">Quick Load</span>
+          </div>
+          <div class="preset-grid">
+            <button class="preset-card active" data-preset="bedroom">
+              <div class="preset-title">🌙 Bedroom Sleep</div>
+              <div class="preset-subtitle">Suction Fan • 365nm • Night</div>
+            </button>
+            <button class="preset-card" data-preset="patio">
+              <div class="preset-title">⚡ Patio Zapper</div>
+              <div class="preset-subtitle">High-Voltage • 2400V Grid</div>
+            </button>
+            <button class="preset-card" data-preset="daylight">
+              <div class="preset-title">☀️ Day Exposure</div>
+              <div class="preset-subtitle">Sunlight washes UV contrast</div>
+            </button>
+            <button class="preset-card" data-preset="scientific">
+              <div class="preset-title">🔬 Wavelength Test</div>
+              <div class="preset-subtitle">365nm UV vs 550nm Green</div>
+            </button>
+          </div>
+        </section>
+
+        <!-- Trap Mechanism Selector (Slide 4 & 7) -->
+        <section class="sidebar-section">
+          <div class="section-title">
+            <span>Trap Type &amp; Mechanism</span>
+            <span id="trap-sound-db" style="font-family: var(--font-mono); color: var(--emerald);">&lt;25 dB</span>
+          </div>
+          <div class="trap-selector-group">
+            <div class="trap-card active" data-trap="zapper">
+              <div class="trap-info-left">
+                <div class="trap-icon-bubble">⚡</div>
+                <div>
+                  <div class="trap-name">Electric Grid Zapper</div>
+                  <div class="trap-subtext">15W–40W • Audible Zap (&gt;65 dB)</div>
+                </div>
+              </div>
+              <span class="trap-badge">High Impact</span>
+            </div>
+
+            <div class="trap-card" data-trap="suction">
+              <div class="trap-info-left">
+                <div class="trap-icon-bubble">🌀</div>
+                <div>
+                  <div class="trap-name">Vortex Suction Fan</div>
+                  <div class="trap-subtext">5W–12W • Whisper Quiet (&lt;25 dB)</div>
+                </div>
+              </div>
+              <span class="trap-badge">Clean &amp; Safe</span>
+            </div>
+
+            <div class="trap-card" data-trap="sticky">
+              <div class="trap-info-left">
+                <div class="trap-icon-bubble">🍯</div>
+                <div>
+                  <div class="trap-name">Hygienic Sticky Pad</div>
+                  <div class="trap-subtext">8W–20W • Completely Silent (0 dB)</div>
+                </div>
+              </div>
+              <span class="trap-badge">Food-Safe</span>
+            </div>
+
+            <div class="trap-card" data-trap="solar">
+              <div class="trap-info-left">
+                <div class="trap-icon-bubble">☀️</div>
+                <div>
+                  <div class="trap-name">Solar Outdoor Lamp</div>
+                  <div class="trap-subtext">3W–10W • Battery + Electro-Mesh</div>
+                </div>
+              </div>
+              <span class="trap-badge">Off-Grid</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Wavelength Selector (Slide 5: 365nm UV-A 94% to 550nm 18%) -->
+        <section class="sidebar-section">
+          <div class="section-title">
+            <span>Phototactic Wavelength</span>
+            <span id="attraction-rate-text" style="color: var(--uv-purple); font-weight: 700;">94% Attraction</span>
+          </div>
+          <div class="wavelength-selector">
+            <button class="wavelength-btn active" data-nm="365">
+              <span class="wl-nm">365 nm</span>
+              <span class="wl-pct" style="color: #c084fc;">94% Deep UV</span>
+            </button>
+            <button class="wavelength-btn" data-nm="395">
+              <span class="wl-nm">395 nm</span>
+              <span class="wl-pct" style="color: #a855f7;">71% Near UV</span>
+            </button>
+            <button class="wavelength-btn" data-nm="450">
+              <span class="wl-nm">450 nm</span>
+              <span class="wl-pct" style="color: #38bdf8;">43% Blue</span>
+            </button>
+            <button class="wavelength-btn" data-nm="550">
+              <span class="wl-nm">550 nm</span>
+              <span class="wl-pct" style="color: #34d399;">18% Green</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Environmental & Placement Controls (Slide 11) -->
+        <section class="sidebar-section">
+          <div class="section-title">
+            <span>Environment &amp; Placement</span>
+          </div>
+          
+          <!-- Ambient Room Lighting Slider -->
+          <div class="control-row">
+            <div class="control-label-bar">
+              <span class="control-name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                </svg>
+                Ambient Room Light
+              </span>
+              <span class="control-val" id="val-ambient-light">Dim (15%)</span>
+            </div>
+            <input type="range" class="sim-slider" id="slider-ambient-light" min="0" max="1" step="0.05" value="0.15">
+          </div>
+
+          <!-- Hanging Height (1.2m - 1.8m Chest Height) -->
+          <div class="control-row">
+            <div class="control-label-bar">
+              <span class="control-name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="19" x2="12" y2="5"></line>
+                  <polyline points="5 12 12 5 19 12"></polyline>
+                </svg>
+                Lamp Height (Chest Level)
+              </span>
+              <span class="control-val" id="val-lamp-height">1.5 m (Optimal)</span>
+            </div>
+            <input type="range" class="sim-slider" id="slider-lamp-height" min="0.8" max="2.4" step="0.1" value="1.5">
+          </div>
+
+          <!-- Human Distance (3-5m Spacing Rule) -->
+          <div class="control-row">
+            <div class="control-label-bar">
+              <span class="control-name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                Human Spacing Distance
+              </span>
+              <span class="control-val" id="val-human-distance">3.5 m (Safe)</span>
+            </div>
+            <input type="range" class="sim-slider" id="slider-human-distance" min="1.0" max="5.5" step="0.2" value="3.5">
+          </div>
+        </section>
+
+        <!-- Live Telemetry KPI Cards -->
+        <section class="sidebar-section">
+          <div class="section-title">
+            <span>Live Protection Telemetry</span>
+            <span style="color: var(--emerald); font-weight: 700;">Active Guard</span>
+          </div>
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-value" id="kpi-trapped-count" style="color: var(--uv-purple);">0</div>
+              <div class="kpi-label">Pests Eliminated</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value" id="kpi-efficiency" style="color: var(--cyan-accent);">0%</div>
+              <div class="kpi-label">Trap Catch Rate</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value" id="kpi-bites-prevented" style="color: var(--emerald);">0</div>
+              <div class="kpi-label">Bites Intercepted</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value" id="kpi-active-insects" style="color: var(--amber);">45</div>
+              <div class="kpi-label">Flying in Room</div>
+            </div>
+          </div>
+
+          <!-- Mosquito Target Dynamics (100% Culicidae Focus) -->
+          <div class="species-list">
+            <div class="species-bar-item">
+              <div class="species-header">
+                <span class="species-name">
+                  <span class="species-dot" style="background:#a855f7;"></span>
+                  Mosquitoes Neutralized
+                </span>
+                <span class="species-count" id="count-mosquito">0</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" id="bar-mosquito" style="width: 0%; background: #a855f7;"></div>
+              </div>
+            </div>
+
+            <div class="species-bar-item">
+              <div class="species-header">
+                <span class="species-name">
+                  <span class="species-dot" style="background:#10b981;"></span>
+                  Bites Intercepted (Protected)
+                </span>
+                <span class="species-count" id="count-bites">0</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" id="bar-bites" style="width: 0%; background: #10b981;"></div>
+              </div>
+            </div>
+
+            <div class="species-bar-item">
+              <div class="species-header">
+                <span class="species-name">
+                  <span class="species-dot" style="background:#06b6d4;"></span>
+                  365nm UV Phototaxis Captures
+                </span>
+                <span class="species-count" id="count-uv">0</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" id="bar-uv" style="width: 0%; background: #06b6d4;"></div>
+              </div>
+            </div>
+
+            <div class="species-bar-item">
+              <div class="species-header">
+                <span class="species-name">
+                  <span class="species-dot" style="background:#f59e0b;"></span>
+                  37°C Thermal Lure Captures
+                </span>
+                <span class="species-count" id="count-thermal">0</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" id="bar-thermal" style="width: 0%; background: #f59e0b;"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Bottom Action Buttons -->
+        <div class="bottom-dock">
+          <button class="primary-btn" id="btn-spawn-burst">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Release Mosquito Swarm
+          </button>
+          <button class="secondary-btn" id="btn-clean-tray" title="Empty the Removable Catch Tray (Slide 11)">
+            Empty Tray
+          </button>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Slide Deck & Knowledge Modal (Slides 1 to 12) -->
+    <div class="modal-overlay" id="guide-modal">
+      <div class="modal-container">
+        <div class="modal-header">
+          <div class="modal-title">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--uv-purple)" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <span>Mosquito &amp; Insect Lamps: Science &amp; Presentation Reference</span>
+          </div>
+          <button class="modal-close-btn" id="btn-close-modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Slide Navigation Tabs -->
+          <nav class="slide-nav" id="slide-nav-list"></nav>
+
+          <!-- Slide Content Display -->
+          <div class="slide-content-view" id="slide-detail-pane"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
